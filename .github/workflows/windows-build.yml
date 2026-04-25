@@ -1,0 +1,38 @@
+name: Flutter Windows Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: 📥 Checkout du code
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      - name: 🔍 Vérifier Flutter
+        run: flutter doctor
+
+      - name: 📦 Installer les dépendances
+        run: flutter pub get
+
+      - name: 🪟 Activer Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: 🏗️ Build Windows
+        run: flutter build windows
+
+      - name: 📤 Upload build
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows/x64/runner/Release/
